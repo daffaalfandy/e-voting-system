@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Voting Design Directions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-7xl mx-auto">
+        <h1 class="text-3xl font-bold mb-2">Design Direction Options</h1>
+        <p class="mb-8 text-gray-600">Comparison of visual strategies for the "Digital Polling Booth"</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Direction A: The Government Official -->
+            <div class="bg-white rounded-xl overflow-hidden shadow-lg border border-gray-200">
+                <div class="p-4 bg-slate-100 border-b border-gray-200 flex justify-between items-center">
+                    <h2 class="font-bold text-lg text-slate-800">Option A: "The Ballot Box"</h2>
+                    <span class="text-xs bg-slate-200 px-2 py-1 rounded text-slate-600 uppercase tracking-wide">High Contrast</span>
+                </div>
+                
+                <!-- Mockup Content -->
+                <div class="p-8 flex flex-col items-center justify-center min-h-[600px] bg-slate-50">
+                    <div class="w-full max-w-sm bg-white shadow-2xl rounded-sm overflow-hidden border-2 border-slate-900">
+                        <!-- Header -->
+                        <div class="bg-slate-900 p-6 text-center">
+                            <h3 class="text-white text-xl font-bold uppercase tracking-widest">Pemilihan Ketua RT</h3>
+                        </div>
+                        
+                        <!-- Content -->
+                        <div class="p-6 space-y-6">
+                            <div class="text-center">
+                                <p class="text-slate-600 text-lg">Silakan pilih satu kandidat:</p>
+                            </div>
+
+                            <!-- Candidate Card 1 -->
+                            <div class="border-4 border-slate-200 p-4 flex items-center gap-4 hover:border-slate-900 cursor-pointer transition-colors group">
+                                <div class="w-24 h-24 bg-slate-200 flex items-center justify-center text-3xl font-bold text-slate-400 group-hover:bg-slate-300">
+                                    1
+                                </div>
+                                <div>
+                                    <h4 class="text-2xl font-bold text-slate-900">Budi Santoso</h4>
+                                    <p class="text-slate-500">Nomor Urut 01</p>
+                                </div>
+                            </div>
+
+                             <!-- Candidate Card 2 -->
+                             <div class="border-4 border-slate-900 p-4 flex items-center gap-4 bg-blue-50 cursor-pointer relative">
+                                <div class="absolute top-0 right-0 bg-green-600 text-white px-3 py-1 text-sm font-bold">DIPILIH</div>
+                                <div class="w-24 h-24 bg-slate-800 flex items-center justify-center text-3xl font-bold text-white">
+                                    2
+                                </div>
+                                <div>
+                                    <h4 class="text-2xl font-bold text-slate-900">Siti Rahma</h4>
+                                    <p class="text-slate-600 font-medium">Nomor Urut 02</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Footer Action -->
+                        <div class="p-6 bg-slate-100 border-t-2 border-slate-200">
+                             <button class="w-full bg-slate-900 text-white text-2xl font-bold py-6 hover:bg-slate-800 transition-colors uppercase tracking-wider">
+                                Konfirmasi Pilihan
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                 <div class="p-4 bg-white border-t border-gray-100">
+                    <p class="text-sm text-gray-600"><strong>Why:</strong> Uses thick borders and "ink" colors to mimic a physical paper ballot. Does not look like a website.</p>
+                </div>
+            </div>
+
+            <!-- Direction B: The Modern App -->
+            <div class="bg-white rounded-xl overflow-hidden shadow-lg border border-gray-200">
+                <div class="p-4 bg-slate-100 border-b border-gray-200 flex justify-between items-center">
+                    <h2 class="font-bold text-lg text-slate-800">Option B: "The Modern ID"</h2>
+                    <span class="text-xs bg-blue-100 px-2 py-1 rounded text-blue-600 uppercase tracking-wide">Clean & Tech</span>
+                </div>
+                
+                <!-- Mockup Content -->
+                <div class="p-8 flex flex-col items-center justify-center min-h-[600px] bg-gray-100">
+                    <div class="w-full max-w-sm bg-white shadow-xl rounded-3xl overflow-hidden">
+                         <!-- Header -->
+                         <div class="bg-blue-600 p-8 pb-12 text-center relative overflow-hidden">
+                            <div class="absolute top-0 left-0 w-full h-full opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+                            <h3 class="text-white text-2xl font-bold relative z-10">Surat Suara Digital</h3>
+                            <p class="text-blue-100 mt-2 relative z-10">RT 05 / RW 12</p>
+                        </div>
+                        
+                        <!-- Content -->
+                        <div class="p-6 -mt-8 relative z-20 space-y-4">
+                            
+                            <!-- Candidate Card 1 -->
+                            <div class="bg-white rounded-xl shadow-md p-4 flex items-center gap-4 hover:shadow-lg transition-shadow cursor-pointer border border-transparent hover:border-blue-500">
+                                <div class="w-20 h-20 rounded-full bg-gray-200 flex-shrink-0"></div>
+                                <div>
+                                    <h4 class="text-xl font-bold text-gray-900">Budi Santoso</h4>
+                                    <span class="inline-block bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-full mt-1">Kandidat 01</span>
+                                </div>
+                            </div>
+
+                             <!-- Candidate Card 2 -->
+                             <div class="bg-blue-50 rounded-xl shadow-md p-4 flex items-center gap-4 border-2 border-blue-500 cursor-pointer ring-4 ring-blue-100">
+                                <div class="w-20 h-20 rounded-full bg-blue-200 flex-shrink-0 border-2 border-white shadow-sm"></div>
+                                <div>
+                                    <h4 class="text-xl font-bold text-blue-900">Siti Rahma</h4>
+                                    <span class="inline-block bg-blue-200 text-blue-800 text-xs px-2 py-1 rounded-full mt-1 font-bold">Kandidat 02</span>
+                                </div>
+                                <div class="ml-auto text-blue-600">
+                                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Footer Action -->
+                        <div class="p-6">
+                             <button class="w-full bg-blue-600 text-white text-xl font-semibold py-4 rounded-xl shadow-lg hover:bg-blue-700 transition-transform active:scale-95 flex items-center justify-center gap-2">
+                                <span>Simpan Pilihan</span>
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-4 bg-white border-t border-gray-100">
+                    <p class="text-sm text-gray-600"><strong>Why:</strong> Uses shadows, rounded corners, and gradients to feel like a modern, premium "App". Friendly but less "Official".</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

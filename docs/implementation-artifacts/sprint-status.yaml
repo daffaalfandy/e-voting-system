@@ -1,0 +1,36 @@
+# generated: 2026-01-11
+# project: e-voting-system
+# tracking_system: file-system
+# story_location: docs/implementation-artifacts
+
+generated: 2026-01-11
+project: e-voting-system
+tracking_system: file-system
+story_location: docs/implementation-artifacts
+
+development_status:
+  # Epic 1: System Foundation & "Remote Control" Integration
+  epic-1: backlog
+  1-1-project-initialization-foundation: backlog
+  1-2-kiosk-admin-authentication: backlog
+  1-3-real-time-state-machine: backlog
+  1-4-admin-dashboard-ui: backlog
+  1-5-kiosk-screensaver: backlog
+  epic-1-retrospective: optional
+
+  # Epic 2: The "Voting Booth" Experience (Kiosk)
+  epic-2: backlog
+  2-1-candidate-grid-ui: backlog
+  2-2-vote-interaction-confirmation: backlog
+  2-3-secure-vote-submission: backlog
+  2-4-success-auto-lock: backlog
+  2-5-active-wait-visuals: backlog
+  2-6-candidate-visi-misi-detail: backlog
+  epic-2-retrospective: optional
+
+  # Epic 3: The "Magic Reveal" (Results & Closing)
+  epic-3: backlog
+  3-1-admin-end-election-trigger: backlog
+  3-2-results-calculation-aggregation: backlog
+  3-3-public-result-display: backlog
+  epic-3-retrospective: optional

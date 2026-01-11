@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>E-Voting Kiosk | RT 05</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'official-blue': '#0F172A', // Slate 900
+                        'official-red': '#D00C0C', // Indonesian Red
+                        'coblos-green': '#16A34A', // Success Green
+                        'paper-white': '#F8FAFC',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Disable Scroll Globally for Kiosk Mode */
+        body {
+            overflow: hidden;
+            touch-action: none;
+        }
+
+        /* Custom "Hybrid" Shadow Utility */
+        .hybrid-shadow {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(226, 232, 240, 1) inset;
+        }
+
+        .hybrid-shadow-active {
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05), 0 0 0 4px rgba(37, 99, 235, 1) inset;
+            /* Blue ring internal */
+        }
+    </style>
+</head>
+
+<body class="bg-paper-white h-screen w-screen flex flex-col relative select-none">
+
+    <!-- 1. STATUS BANNER (Fixed Top) -->
+    <header class="h-20 bg-emerald-100 border-b-2 border-emerald-500 flex items-center justify-between px-8 shrink-0">
+        <div class="flex items-center gap-4">
+            <div class="w-4 h-4 bg-emerald-600 rounded-full animate-pulse"></div>
+            <span class="text-2xl font-bold text-emerald-900 tracking-wide">SILAKAN PILIH</span>
+        </div>
+        <div class="text-xl font-medium text-emerald-800">
+            BILIK 01 • RT 05 / RW 12
+        </div>
+    </header>
+
+    <!-- 2. CANDIDATE GRID (Main Content) -->
+    <!-- Fixed 2x2 Grid for Tablet Landscape -->
+    <main class="flex-1 p-8 grid grid-cols-2 gap-8 items-center justify-center">
+
+        <!-- Candidate 01 -->
+        <article onclick="selectCandidate(1)" id="cand-1"
+            class="relative group h-full max-h-[500px] bg-white rounded-xl hybrid-shadow transition-all duration-200 cursor-pointer active:scale-[0.99] flex flex-row overflow-hidden">
+            <!-- Left: Photo -->
+            <div class="w-1/3 bg-slate-200 relative">
+                <!-- Fallback Image -->
+                <svg class="w-full h-full text-slate-400 p-8" fill="currentColor" viewBox="0 0 24 24">
+                    <path
+                        d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+                <!-- Number Badge -->
+                <div
+                    class="absolute top-4 left-4 w-16 h-16 bg-slate-900 text-white rounded-full flex items-center justify-center text-3xl font-black border-4 border-white shadow-lg">
+                    1
+                </div>
+            </div>
+            <!-- Right: Details -->
+            <div class="w-2/3 p-8 flex flex-col justify-center gap-2">
+                <h2 class="text-4xl font-bold text-slate-900 leading-tight">Budi<br>Santoso</h2>
+                <p class="text-2xl text-slate-500 font-medium mt-2">Ketua RT Petahana</p>
+                <!-- Selection Indicator (Hidden by default) -->
+                <div id="check-1" class="hidden mt-6 flex items-center gap-2 text-blue-700">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span class="text-xl font-bold uppercase">Terpilih</span>
+                </div>
+            </div>
+        </article>
+
+        <!-- Candidate 02 -->
+        <article onclick="selectCandidate(2)" id="cand-2"
+            class="relative group h-full max-h-[500px] bg-white rounded-xl hybrid-shadow transition-all duration-200 cursor-pointer active:scale-[0.99] flex flex-row overflow-hidden">
+            <div class="w-1/3 bg-slate-200 relative">
+                <svg class="w-full h-full text-slate-400 p-8" fill="currentColor" viewBox="0 0 24 24">
+                    <path
+                        d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+                <div
+                    class="absolute top-4 left-4 w-16 h-16 bg-slate-100 text-slate-900 rounded-full flex items-center justify-center text-3xl font-black border-4 border-white shadow-lg">
+                    2
+                </div>
+            </div>
+            <div class="w-2/3 p-8 flex flex-col justify-center gap-2">
+                <h2 class="text-4xl font-bold text-slate-900 leading-tight">Siti<br>Aminah</h2>
+                <p class="text-2xl text-slate-500 font-medium mt-2">Tokoh Masyarakat</p>
+                <div id="check-2" class="hidden mt-6 flex items-center gap-2 text-blue-700">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span class="text-xl font-bold uppercase">Terpilih</span>
+                </div>
+            </div>
+        </article>
+
+        <!-- Emtpy Slots (To maintain grid consistency) -->
+        <div
+            class="bg-slate-50 rounded-xl border-2 border-dashed border-slate-200 flex items-center justify-center h-full max-h-[500px] opacity-50">
+            <span class="text-slate-300 text-xl font-bold uppercase tracking-widest">Kotak Kosong</span>
+        </div>
+        <div
+            class="bg-slate-50 rounded-xl border-2 border-dashed border-slate-200 flex items-center justify-center h-full max-h-[500px] opacity-50">
+            <span class="text-slate-300 text-xl font-bold uppercase tracking-widest">Kotak Kosong</span>
+        </div>
+
+    </main>
+
+    <!-- 3. ACTION BAR (Bottom Fixed) -->
+    <!-- Initially Hidden or Disabled -->
+    <footer id="action-bar"
+        class="h-24 bg-white border-t border-slate-200 flex items-center justify-between px-8 shrink-0 transition-transform duration-300 translate-y-full">
+        <div class="text-xl text-slate-500 font-medium">
+            <span id="selected-name" class="font-bold text-slate-900">...</span> dipilih.
+        </div>
+
+        <div class="flex gap-4 h-full py-4">
+            <!-- Cancel Button -->
+            <button onclick="resetSelection()"
+                class="px-8 h-full rounded-lg border-2 border-slate-300 text-slate-600 font-bold text-xl uppercase tracking-wide hover:bg-slate-50 transition-colors">
+                Ganti
+            </button>
+
+            <!-- Confirm Button (Green) -->
+            <button onclick="showConfirmModal()"
+                class="px-12 h-full rounded-lg bg-emerald-600 text-white font-bold text-2xl uppercase tracking-widest shadow-lg hover:bg-emerald-700 transition-colors flex items-center gap-3">
+                <span>Coblos</span>
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+                </svg>
+            </button>
+        </div>
+    </footer>
+
+    <!-- 4. MODAL (Confirmation) -->
+    <div id="confirm-modal"
+        class="fixed inset-0 bg-slate-900/90 backdrop-blur-sm z-50 hidden flex items-center justify-center p-8">
+        <div
+            class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full overflow-hidden transform transition-all scale-100">
+            <div class="p-8 text-center border-b border-slate-100">
+                <h3 class="text-3xl font-bold text-slate-900">Konfirmasi Pilihan?</h3>
+                <p class="text-xl text-slate-500 mt-2">Pastikan pilihan Anda sudah sesuai.</p>
+            </div>
+
+            <div class="p-12 bg-slate-50 flex flex-col items-center">
+                <div
+                    class="w-32 h-32 bg-slate-900 rounded-full flex items-center justify-center text-white text-5xl font-black mb-6">
+                    <span id="modal-number">1</span>
+                </div>
+                <h4 id="modal-name" class="text-4xl font-bold text-slate-900">Budi Santoso</h4>
+            </div>
+
+            <div class="grid grid-cols-2 text-2xl font-bold uppercase">
+                <button onclick="hideConfirmModal()"
+                    class="p-8 bg-white text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-colors border-t border-slate-200">
+                    Kembali
+                </button>
+                <button onclick="submitVote()"
+                    class="p-8 bg-official-blue text-white hover:bg-slate-800 transition-colors flex items-center justify-center gap-4">
+                    YA, SAHKAN
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentSelection = null;
+
+        function selectCandidate(id) {
+            // 1. Visual Feedback
+            // Reset all
+            document.querySelectorAll('article').forEach(el => {
+                el.classList.remove('ring-4', 'ring-blue-600', 'bg-blue-50');
+                el.classList.add('bg-white');
+                el.querySelector('[id^="check-"]').classList.add('hidden');
+                el.classList.remove('opacity-50', 'grayscale');
+            });
+
+            // Activate Target
+            const target = document.getElementById(`cand-${id}`);
+            target.classList.remove('bg-white');
+            target.classList.add('ring-4', 'ring-blue-600', 'bg-blue-50');
+            target.querySelector(`[id^="check-"]`).classList.remove('hidden');
+
+            // Fade others
+            document.querySelectorAll('article').forEach(el => {
+                if (el.id !== `cand-${id}`) {
+                    el.classList.add('opacity-50', 'grayscale');
+                }
+            });
+
+            // 2. State Update
+            currentSelection = id;
+            document.getElementById('selected-name').innerText = id === 1 ? 'Budi Santoso' : 'Siti Aminah';
+
+            // 3. Show Action Bar
+            document.getElementById('action-bar').classList.remove('translate-y-full');
+        }
+
+        function resetSelection() {
+            currentSelection = null;
+            document.querySelectorAll('article').forEach(el => {
+                el.classList.remove('ring-4', 'ring-blue-600', 'bg-blue-50', 'opacity-50', 'grayscale');
+                el.classList.add('bg-white');
+                el.querySelector('[id^="check-"]').classList.add('hidden');
+            });
+            document.getElementById('action-bar').classList.add('translate-y-full');
+        }
+
+        function showConfirmModal() {
+            document.getElementById('modal-number').innerText = currentSelection;
+            document.getElementById('modal-name').innerText = currentSelection === 1 ? 'Budi Santoso' : 'Siti Aminah';
+            document.getElementById('confirm-modal').classList.remove('hidden');
+            // Audio Cue (Optional)
+        }
+
+        function hideConfirmModal() {
+            document.getElementById('confirm-modal').classList.add('hidden');
+        }
+
+        function submitVote() {
+            alert("SUARA SAH! Terima Kasih.");
+            location.reload();
+        }
+    </script>
+</body>
+
+</html>
