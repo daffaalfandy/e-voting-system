@@ -1,43 +1,104 @@
 # e-Voting RT - Sistem Pemilihan Digital RT
 
-A real-time e-voting system for RT Chairman elections with remote control capabilities.
+A real-time e-voting system for RT Chairman elections with remote control capabilities, designed for simplicity and accessibility.
 
-## Tech Stack
+![Status](https://img.shields.io/badge/status-production--ready-green)
+![Firebase](https://img.shields.io/badge/Firebase-Free%20Tier-orange)
 
-- **Next.js 14** - React framework with App Router
-- **TypeScript** - Type-safe development
-- **Tailwind CSS** - Utility-first styling
-- **Firebase Realtime Database** - Real-time state synchronization
-- **Radix UI** - Headless UI components
-- **Lucide React** - Icon library
+## ✨ Features
 
-## Features (Epic 1 - System Foundation)
+### 🏠 Dual Interface Architecture
+- **Kiosk** (`/`) - Voter-facing touchscreen interface
+- **Admin** (`/admin`) - Committee-controlled remote panel
 
-✅ **Dual Interface Architecture**
-- Kiosk interface at `/` (voter-facing)
-- Admin control panel at `/admin` (committee-facing)
-
-✅ **Event PIN Authentication**
-- Single PIN for both interfaces (configurable via environment variable)
+### 🔐 Event PIN Authentication
+- Single PIN for both interfaces (environment variable)
 - Kiosk: localStorage-based session persistence
 - Admin: cookie-based session management
 
-✅ **Real-Time State Machine**
-- LOCKED → READY → VOTING → COMPLETED
+### 📊 Real-Time State Machine
+```
+LOCKED → READY → VOTING → COMPLETED
+```
 - Sub-2-second synchronization via Firebase RTDB
 - Admin remote control of Kiosk state
+- Automatic state transitions after voting
 
-✅ **Kiosk Screensaver**
-- "MENUNGGU PETUGAS" display when LOCKED
-- Automatic wake-up on Admin unlock signal
+### 🗳️ Complete Voting Flow (Epic 2)
+- **2x2 Candidate Grid** - Photos, names, touch-friendly cards
+- **Vote Confirmation Modal** - Expandable Visi & Misi section
+- **Anonymous Vote Submission** - Only `candidate_id`, `timestamp`, `device_id`
+- **Progress Bar** - Visual "Active Wait" during submission
+- **Thank You Screen** - 3-second display with auto-lock
 
-✅ **Design System**
+### 🏆 Results Display (Epic 3)
+- **Bar Chart Results** - Pure CSS/Tailwind (no chart library)
+- **Winner Highlighting** - Green bar + trophy icon
+- **Vote Aggregation** - Client-side counting from Firebase
+- **Total Vote Count** - Displayed in header
+
+### ⚙️ Admin Controls
+- **BUKA BILIK** - Unlock booth for next voter
+- **KUNCI BILIK** - Lock booth (back to screensaver)
+- **AKHIRI PEMILIHAN** - End election permanently (with confirmation)
+- **RESET DATA** - Clear all votes for testing (COMPLETED state only)
+
+### 🎨 Design System
 - Custom Tailwind tokens (Deep Slate Blue, Indonesian Red, Coblos Green)
 - Inter font from Google Fonts
 - 60px minimum touch targets for elderly accessibility
-- All UI text in Bahasa Indonesia
+- All UI text in **Bahasa Indonesia**
 
-## Setup Instructions
+## 🛠️ Tech Stack
+
+| Technology | Purpose |
+|------------|---------|
+| **Next.js 14** | React framework with App Router |
+| **TypeScript** | Type-safe development |
+| **Tailwind CSS** | Utility-first styling |
+| **Firebase Realtime Database** | Real-time state synchronization |
+| **Radix UI Dialog** | Accessible modal components |
+| **Lucide React** | Icon library |
+
+## 📦 Project Structure
+
+```
+src/
+├── app/
+│   ├── admin/page.tsx        # Admin control panel
+│   ├── layout.tsx            # Root layout with Inter font
+│   ├── page.tsx              # Kiosk main page
+│   └── globals.css           # Tailwind directives
+├── components/
+│   ├── BigButton.tsx         # Large touch-friendly button
+│   ├── CandidateCard.tsx     # Individual candidate card
+│   ├── CandidateGrid.tsx     # 2x2 candidate grid
+│   ├── ConfirmDialog.tsx     # Reusable confirmation modal
+│   ├── PinInput.tsx          # PIN authentication form
+│   ├── ProgressBar.tsx       # Animated progress indicator
+│   ├── ResultBar.tsx         # Individual result bar
+│   ├── ResultsDisplay.tsx    # Full results view
+│   ├── StatusBanner.tsx      # Election status indicator
+│   ├── ThankYouScreen.tsx    # Post-vote success screen
+│   └── VoteConfirmModal.tsx  # Vote confirmation with Visi/Misi
+├── data/
+│   └── candidates.ts         # Hardcoded candidate data
+├── hooks/
+│   ├── useAuth.ts            # Kiosk & Admin authentication
+│   ├── useDeviceId.ts        # Persistent device UUID
+│   ├── useElection.ts        # Real-time election state
+│   ├── useResults.ts         # Vote aggregation
+│   └── useVote.ts            # Vote submission
+├── lib/
+│   └── firebase.ts           # Firebase client initialization
+├── types/
+│   ├── candidate.ts          # Candidate interface
+│   └── election.ts           # Election state types
+└── public/
+    └── candidates/           # Candidate photos (JPEG/SVG)
+```
+
+## 🚀 Quick Start
 
 ### 1. Install Dependencies
 
@@ -48,57 +109,84 @@ npm install
 ### 2. Create Firebase Project
 
 1. Go to [Firebase Console](https://console.firebase.google.com/)
-2. Click "Create a project" → Name: "e-voting-rt"
+2. Click "Create a project" → Name: `e-voting-rt`
 3. Disable Google Analytics (not needed)
-4. Go to "Build" → "Realtime Database" → "Create Database"
-5. Select "Singapore (asia-southeast1)" region
+4. Go to **Build** → **Realtime Database** → **Create Database**
+5. Select **Singapore (asia-southeast1)** region
 6. Start in **Test Mode** (allows all reads/writes for 30 days)
-7. Go to Project Settings → General → "Your apps" → Web icon (`</>`)
-8. Register app name: "e-voting-web"
+7. Go to **Project Settings** → **General** → **Your apps** → Web icon (`</>`)
+8. Register app name: `e-voting-web`
 9. Copy the `firebaseConfig` values
 
 ### 3. Configure Environment Variables
 
-Create or update `.env.local` with your Firebase credentials:
+Create `.env.local`:
 
 ```env
 NEXT_PUBLIC_EVENT_PIN=123456
 NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key_here
 NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
-NEXT_PUBLIC_FIREBASE_DATABASE_URL=https://your_project.firebaseio.com
+NEXT_PUBLIC_FIREBASE_DATABASE_URL=https://your_project-default-rtdb.asia-southeast1.firebasedatabase.app
 NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
 NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
 NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
 NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
 ```
 
-### 4. Initialize Firebase Database
+### 4. Add Candidate Photos
 
-In Firebase Console → Realtime Database, manually add initial data:
+Place candidate photos in `public/candidates/`:
+- `candidate_1.jpeg`
+- `candidate_2.jpeg`
+- `candidate_3.jpeg`
+- `placeholder.svg` (for candidates without photos)
 
-```json
-{
-  "election_state": {
-    "status": "LOCKED",
-    "last_updated": 0,
-    "session_id": ""
-  }
-}
+### 5. Update Candidate Data
+
+Edit `src/data/candidates.ts` with your candidate information:
+
+```typescript
+export const CANDIDATES: Candidate[] = [
+  {
+    id: 'candidate_1',
+    number: 1,
+    name: 'Nama Kandidat',
+    photo: '/candidates/candidate_1.jpeg',
+    visi: 'Visi kandidat...',
+    misi: ['Misi 1', 'Misi 2', 'Misi 3'],
+  },
+  // ... more candidates
+];
 ```
 
-### 5. Run Development Server
+### 6. Run Development Server
 
 ```bash
 npm run dev
 ```
 
 Open:
-- Kiosk: http://localhost:3000
-- Admin: http://localhost:3000/admin
+- **Kiosk**: http://localhost:3000
+- **Admin**: http://localhost:3000/admin
 
 Default PIN: `123456` (change in `.env.local`)
 
-## Manual Testing Procedure
+## 📱 LAN Access (Mobile/Tablet)
+
+To access from other devices on the same network:
+
+```bash
+npm run dev
+# Note the Network URL: http://192.168.x.x:3000
+```
+
+Access from mobile/tablet using the Network URL.
+
+> **Note:** The app handles non-secure contexts (HTTP over LAN) with fallback UUID generation.
+
+## 🧪 Manual Testing Procedure
+
+### Basic Flow Test
 
 1. Open two browser windows:
    - Window 1: http://localhost:3000 (Kiosk)
@@ -106,100 +194,126 @@ Default PIN: `123456` (change in `.env.local`)
 
 2. Enter PIN `123456` on both
 
-3. On Admin, click "🔓 BUKA BILIK"
-   - Observe Kiosk immediately wakes from screensaver
-   - Status banner turns green: "SILAKAN MEMILIH"
+3. **Admin**: Click "🔓 BUKA BILIK"
+   - Kiosk wakes from screensaver
+   - Status turns green: "SILAKAN MEMILIH"
 
-4. On Admin, click "🔒 KUNCI BILIK"
-   - Observe Kiosk returns to screensaver
+4. **Kiosk**: Tap a candidate
+   - Confirmation modal appears
+   - Expand "Lihat Visi & Misi" to view details
 
-5. Refresh both pages
-   - Confirm sessions persist (no re-authentication required)
+5. **Kiosk**: Tap "YA, SAYA YAKIN"
+   - Progress bar animates
+   - "TERIMA KASIH" screen appears
+   - Auto-locks after 3 seconds
 
-## Project Structure
+6. Repeat steps 3-5 for multiple votes
+
+7. **Admin**: Click "⚠️ AKHIRI PEMILIHAN"
+   - Confirm in dialog
+   - Kiosk shows results with bar chart
+
+8. **Admin**: Click "🔄 RESET DATA" (optional, for testing)
+   - Clears all votes
+   - Resets to LOCKED state
+
+### Verify in Firebase Console
 
 ```
-src/
-├── app/
-│   ├── admin/
-│   │   └── page.tsx          # Admin control panel
-│   ├── layout.tsx             # Root layout with Inter font
-│   ├── page.tsx               # Kiosk main page
-│   └── globals.css            # Tailwind directives
-├── components/
-│   ├── BigButton.tsx          # Large touch-friendly button
-│   ├── PinInput.tsx           # PIN authentication form
-│   └── StatusBanner.tsx       # Election status indicator
-├── hooks/
-│   ├── useAuth.ts             # Kiosk & Admin authentication
-│   └── useElection.ts         # Real-time election state
-├── lib/
-│   └── firebase.ts            # Firebase client initialization
-└── types/
-    └── election.ts            # TypeScript interfaces
+/election_state
+  └── status: "LOCKED" | "READY" | "VOTING" | "COMPLETED"
+
+/votes/{auto-id}
+  ├── candidate_id: "candidate_1"
+  ├── timestamp: 1736579200000
+  └── device_id: "uuid-string"
 ```
 
-## Acceptance Criteria Status
+## 📊 Firebase Free Tier Limits
 
-### Story 1.1: Project Initialization ✅
-- [x] Next.js 14 App Router starts on localhost:3000
-- [x] Inter font loaded from Google Fonts
-- [x] Custom Tailwind colors applied correctly
-- [x] Firebase SDK initializes without errors
+Your RT election is **well within free tier limits**:
 
-### Story 1.2: Authentication ✅
-- [x] Kiosk PIN screen shows "Otorisasi Bilik Suara"
-- [x] Correct PIN stores `kiosk_authorized=true` in localStorage
-- [x] Incorrect PIN shows error: "PIN salah. Silakan coba lagi."
-- [x] Kiosk session persists on browser refresh
-- [x] Admin PIN sets session cookie
-- [x] Admin session persists on refresh
+| Resource | Free Limit | 200 Voters Estimate |
+|----------|------------|---------------------|
+| Storage | 1 GB | ~20 KB (0.002%) |
+| Downloads | 10 GB/month | ~200 KB |
+| Connections | 100 | 2 (Kiosk + Admin) |
 
-### Story 1.3: Real-Time State Machine ✅
-- [x] State changes sync in <2 seconds
-- [x] `useElection` hook exposes state, loading, error, unlockBooth, lockBooth
-- [x] TypeScript enforces valid ElectionStatus values
+✅ **You can run thousands of elections per month on the free tier!**
 
-### Story 1.4: Admin Dashboard ✅
-- [x] Shows "🔓 BUKA BILIK" button when LOCKED
-- [x] Button changes to "🔒 KUNCI BILIK" when READY
-- [x] StatusBanner reflects current state with correct colors
-- [x] Footer shows "Terakhir diperbarui" timestamp
-
-### Story 1.5: Kiosk Screensaver ✅
-- [x] Full-screen screensaver with dark background when LOCKED
-- [x] Shows "MENUNGGU PETUGAS" with lock icon
-- [x] Dismisses automatically when Admin unlocks
-- [x] Shows green "SILAKAN MEMILIH" banner when READY
-
-## Next Steps (Epic 2 & 3)
-
-- **Epic 2**: Candidate grid, vote selection, confirmation dialog, vote submission
-- **Epic 3**: Results display with "Magic Reveal" animation
-
-## Security Notes
+## 🔒 Security Notes
 
 ⚠️ **Before Production:**
-- Configure Firebase Security Rules (currently in Test Mode)
-- Use strong Event PIN (not default `123456`)
-- Enable HTTPS for deployment
-- Consider server-side PIN validation
 
-## Deployment
+1. **Firebase Security Rules** - Currently in Test Mode (30-day limit)
+   ```json
+   {
+     "rules": {
+       "election_state": {
+         ".read": true,
+         ".write": true
+       },
+       "votes": {
+         ".read": true,
+         ".write": true
+       }
+     }
+   }
+   ```
 
-Build for production:
+2. **Strong Event PIN** - Change default `123456` to a secure 6-digit PIN
+
+3. **HTTPS** - Use Vercel or similar for automatic HTTPS
+
+4. **Physical Security** - Keep Admin device with committee only
+
+## 🚢 Deployment
+
+### Build for Production
 
 ```bash
 npm run build
 npm start
 ```
 
-Deploy to Vercel (recommended):
+### Deploy to Vercel (Recommended)
 
 ```bash
 npx vercel
 ```
 
-## License
+Add environment variables in Vercel Dashboard → Settings → Environment Variables.
+
+## 📋 Acceptance Criteria Status
+
+### Epic 1: System Foundation ✅
+- [x] Next.js 14 App Router with TypeScript
+- [x] Firebase Realtime Database integration
+- [x] Event PIN authentication (Kiosk + Admin)
+- [x] Real-time state machine (LOCKED → READY → VOTING → COMPLETED)
+- [x] Admin Dashboard with unlock/lock controls
+- [x] Kiosk Screensaver with auto-wake
+
+### Epic 2: Voting Booth Experience ✅
+- [x] 2x2 Candidate Grid with photos and names
+- [x] Vote Confirmation Modal with Visi & Misi
+- [x] Anonymous vote submission to Firebase `/votes`
+- [x] Progress bar during submission
+- [x] Thank You screen with 3-second auto-lock
+- [x] 500ms debounce to prevent double-tap
+
+### Epic 3: Magic Reveal (Results & Closing) ✅
+- [x] "AKHIRI PEMILIHAN" button with confirmation dialog
+- [x] Vote aggregation from Firebase
+- [x] Bar chart results display with percentages
+- [x] Winner highlighting (green + trophy icon)
+- [x] "RESET DATA" button for testing (COMPLETED state only)
+- [x] All votes cleared on reset
+
+## 📄 License
 
 Private - RT Internal Use Only
+
+---
+
+Built with ❤️ for RT community elections
