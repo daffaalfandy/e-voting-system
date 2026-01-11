@@ -10,10 +10,24 @@ export const dynamic = 'force-dynamic';
 
 export default function AdminPage() {
     const { isAuthorized, authorize } = useAdminAuth();
-    const { state, loading, unlockBooth, lockBooth } = useElection();
+    const { state, loading, error, unlockBooth, lockBooth } = useElection();
 
     if (!isAuthorized) {
         return <PinInput onSubmit={authorize} title="Panel Petugas" />;
+    }
+
+    if (error) {
+        return (
+            <div className="min-h-screen bg-indonesian-red flex flex-col items-center justify-center p-8 text-white">
+                <h1 className="text-3xl font-bold mb-4">Gagal Terhubung</h1>
+                <p className="text-xl mb-8 text-center">{error.message}</p>
+                <div className="bg-white/10 p-4 rounded text-sm font-mono whitespace-pre-wrap text-left w-full max-w-lg overflow-x-auto">
+                    <strong>Debug Info:</strong>{'\n'}
+                    Project ID: {process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID}{'\n'}
+                    Database URL: {process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL}
+                </div>
+            </div>
+        );
     }
 
     if (loading || !state) {

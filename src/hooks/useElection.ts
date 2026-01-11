@@ -17,7 +17,17 @@ export function useElection() {
 
         const stateRef = ref(database, 'election_state');
         const unsubscribe = onValue(stateRef, (snapshot) => {
-            setState(snapshot.val());
+            const data = snapshot.val();
+            if (data) {
+                setState(data);
+            } else {
+                // Initialize default state if DB is empty
+                setState({
+                    status: 'LOCKED',
+                    last_updated: Date.now(),
+                    session_id: 'initial',
+                });
+            }
             setLoading(false);
         }, (err) => {
             setError(err);
@@ -41,6 +51,7 @@ export function useElection() {
 
     const unlockBooth = () => updateStatus('READY');
     const lockBooth = () => updateStatus('LOCKED');
+    const setVoting = () => updateStatus('VOTING');
 
-    return { state, loading, error, unlockBooth, lockBooth, updateStatus };
+    return { state, loading, error, unlockBooth, lockBooth, setVoting, updateStatus };
 }
