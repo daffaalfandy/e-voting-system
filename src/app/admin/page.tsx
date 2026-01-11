@@ -1,16 +1,38 @@
 'use client';
+import { useState } from 'react';
 import { useAdminAuth } from '@/hooks/useAuth';
 import { useElection } from '@/hooks/useElection';
 import { PinInput } from '@/components/PinInput';
 import { BigButton } from '@/components/BigButton';
 import { StatusBanner } from '@/components/StatusBanner';
+import { ConfirmDialog } from '@/components/ConfirmDialog';
 
 export const dynamic = 'force-dynamic';
 
 
 export default function AdminPage() {
     const { isAuthorized, authorize } = useAdminAuth();
-    const { state, loading, error, unlockBooth, lockBooth } = useElection();
+    const { state, loading, error, unlockBooth, lockBooth, endElection, resetElection } = useElection();
+
+    // Dialog states
+    const [showEndDialog, setShowEndDialog] = useState(false);
+    const [showResetDialog, setShowResetDialog] = useState(false);
+    const [isProcessing, setIsProcessing] = useState(false);
+
+    // Handlers
+    const handleEndElection = async () => {
+        setIsProcessing(true);
+        await endElection();
+        setIsProcessing(false);
+        setShowEndDialog(false);
+    };
+
+    const handleResetElection = async () => {
+        setIsProcessing(true);
+        await resetElection();
+        setIsProcessing(false);
+        setShowResetDialog(false);
+    };
 
     if (!isAuthorized) {
         return <PinInput onSubmit={authorize} title="Panel Petugas" />;
@@ -53,32 +75,79 @@ export default function AdminPage() {
                 </div>
 
                 {state.status === 'LOCKED' && (
-                    <BigButton variant="success" onClick={unlockBooth} className="w-full max-w-md">
-                        🔓 BUKA BILIK
-                    </BigButton>
+                    <div className="flex flex-col gap-4 w-full max-w-md">
+                        <BigButton variant="success" onClick={unlockBooth} className="w-full">
+                            🔓 BUKA BILIK
+                        </BigButton>
+                        <BigButton variant="danger" onClick={() => setShowEndDialog(true)} className="w-full">
+                            ⚠️ AKHIRI PEMILIHAN
+                        </BigButton>
+                    </div>
                 )}
 
                 {state.status === 'READY' && (
-                    <div className="text-center space-y-4">
+                    <div className="text-center space-y-4 w-full max-w-md">
                         <p className="text-xl text-coblos-green font-semibold animate-pulse">
                             Menunggu pemilih memasuki bilik...
                         </p>
-                        <BigButton variant="danger" onClick={lockBooth} className="w-full max-w-md">
+                        <BigButton variant="danger" onClick={lockBooth} className="w-full">
                             🔒 KUNCI BILIK
+                        </BigButton>
+                        <BigButton variant="danger" onClick={() => setShowEndDialog(true)} className="w-full">
+                            ⚠️ AKHIRI PEMILIHAN
+                        </BigButton>
+                    </div>
+                )}
+
+                {state.status === 'VOTING' && (
+                    <div className="text-center space-y-4 w-full max-w-md">
+                        <p className="text-xl text-coblos-green font-semibold animate-pulse">
+                            Pemilih sedang memberikan suara...
+                        </p>
+                        <BigButton variant="danger" onClick={() => setShowEndDialog(true)} className="w-full">
+                            ⚠️ AKHIRI PEMILIHAN
                         </BigButton>
                     </div>
                 )}
 
                 {state.status === 'COMPLETED' && (
-                    <p className="text-xl text-slate-600">
-                        Pemilihan telah berakhir. Lihat hasil di layar Kiosk.
-                    </p>
+                    <div className="text-center space-y-4 w-full max-w-md">
+                        <p className="text-xl text-slate-600">
+                            Pemilihan telah berakhir. Lihat hasil di layar Kiosk.
+                        </p>
+                        <BigButton variant="danger" onClick={() => setShowResetDialog(true)} className="w-full">
+                            🔄 RESET DATA (Testing)
+                        </BigButton>
+                    </div>
                 )}
             </div>
 
             <div className="p-4 text-center text-sm text-slate-400">
                 Terakhir diperbarui: {new Date(state.last_updated).toLocaleTimeString('id-ID')}
             </div>
+
+            {/* End Election Confirmation Dialog */}
+            <ConfirmDialog
+                isOpen={showEndDialog}
+                onConfirm={handleEndElection}
+                onCancel={() => setShowEndDialog(false)}
+                title="AKHIRI PEMILIHAN?"
+                message="Tindakan ini tidak dapat dibatalkan. Setelah pemilihan diakhiri, hasil akan ditampilkan di layar Kiosk."
+                confirmText="Ya, Akhiri"
+                isLoading={isProcessing}
+            />
+
+            {/* Reset Data Confirmation Dialog */}
+            <ConfirmDialog
+                isOpen={showResetDialog}
+                onConfirm={handleResetElection}
+                onCancel={() => setShowResetDialog(false)}
+                title="RESET SEMUA DATA?"
+                message="PERINGATAN: Semua suara akan dihapus dan pemilihan akan direset. Tindakan ini tidak dapat dibatalkan!"
+                confirmText="Ya, Reset"
+                isLoading={isProcessing}
+            />
         </div>
     );
 }
+

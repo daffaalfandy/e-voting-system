@@ -1,7 +1,20 @@
 import { useState, useEffect } from 'react';
-import { ref, onValue, set } from 'firebase/database';
+import { ref, onValue, set, remove } from 'firebase/database';
 import { database } from '@/lib/firebase';
 import { ElectionState, ElectionStatus } from '@/types/election';
+
+// Fallback UUID generator for non-secure contexts (HTTP over LAN)
+function generateUUID(): string {
+    if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+        return crypto.randomUUID();
+    }
+    // Fallback for non-secure contexts (e.g. LAN IP access via HTTP)
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        const r = Math.random() * 16 | 0;
+        const v = c === 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+}
 
 export function useElection() {
     const [state, setState] = useState<ElectionState | null>(null);
@@ -45,13 +58,27 @@ export function useElection() {
         await set(stateRef, {
             status: newStatus,
             last_updated: Date.now(),
-            session_id: crypto.randomUUID(),
+            session_id: generateUUID(),
         });
     };
 
     const unlockBooth = () => updateStatus('READY');
     const lockBooth = () => updateStatus('LOCKED');
     const setVoting = () => updateStatus('VOTING');
+    const endElection = () => updateStatus('COMPLETED');
 
-    return { state, loading, error, unlockBooth, lockBooth, setVoting, updateStatus };
+    const resetElection = async () => {
+        if (!database) {
+            throw new Error('Firebase not initialized');
+        }
+
+        // Clear all votes
+        const votesRef = ref(database, 'votes');
+        await remove(votesRef);
+
+        // Reset state to LOCKED
+        await updateStatus('LOCKED');
+    };
+
+    return { state, loading, error, unlockBooth, lockBooth, setVoting, endElection, resetElection, updateStatus };
 }

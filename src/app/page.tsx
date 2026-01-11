@@ -10,6 +10,7 @@ import { CandidateGrid } from '@/components/CandidateGrid';
 import { VoteConfirmModal } from '@/components/VoteConfirmModal';
 import { ThankYouScreen } from '@/components/ThankYouScreen';
 import { ProgressBar } from '@/components/ProgressBar';
+import { ResultsDisplay } from '@/components/ResultsDisplay';
 import { Candidate } from '@/types/candidate';
 import { LockKeyhole } from 'lucide-react';
 
@@ -138,15 +139,11 @@ export default function KioskPage() {
         );
     }
 
-    // COMPLETED state - Will show results in Epic 3
+    // COMPLETED state - Show Results
     return (
         <div className="min-h-screen bg-paper-white flex flex-col">
             <StatusBanner status={state.status} />
-            <div className="flex-1 flex items-center justify-center">
-                <p className="text-2xl text-slate-600">
-                    [Hasil akan ditampilkan di sini - Epic 3]
-                </p>
-            </div>
+            <ResultsDisplay />
         </div>
     );
 }
